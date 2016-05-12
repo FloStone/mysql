@@ -1,11 +1,14 @@
 <?php
 
-require 'MySQLResult.php';
-require 'Collection.php';
+namespace Flo\MySQL;
+
+use MySQLResult;
+use Collection;
+use Statement;
 
 class MySQL
 {
-	require 'Statement.php';
+	use Statement;
 
 	/**
 	 * Hostname of mysql database

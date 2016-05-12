@@ -1,5 +1,7 @@
 <?php
 
+namespace Flo\MySQL;
+
 class Collection implements IteratorAggregate
 {
 	/**

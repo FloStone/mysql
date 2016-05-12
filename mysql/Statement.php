@@ -1,5 +1,7 @@
 <?php
 
+namespace Flo\MySQL;
+
 /**
  * Trait for MySQL statement
  *
