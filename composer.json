@@ -1,0 +1,14 @@
+{
+    "name": "flo5581/mysql-plainphp",
+    "description": "MySQL Library for plain php and other applications",
+    "authors": [
+        {
+            "name": "Flo Stone",
+        }
+    ],
+    "autoload": {
+    	"psr-4": {
+    		"Flo\\MySQL\\": "mysql/"
+    	}
+    }
+}
