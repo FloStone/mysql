@@ -2,6 +2,8 @@
 
 namespace Flo\MySQL;
 
+use IteratorAggregate;
+
 class Collection implements IteratorAggregate
 {
 	/**

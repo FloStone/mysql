@@ -2,10 +2,6 @@
 
 namespace Flo\MySQL;
 
-use MySQLResult;
-use Collection;
-use Statement;
-
 class MySQL
 {
 	use Statement;
