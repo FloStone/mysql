@@ -8,8 +8,8 @@
         }
     ],
     "autoload": {
-    	"files": {
+    	"files": [
             "mysql/MySQL.php"
-        }
+        ]
     }
 }
