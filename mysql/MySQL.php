@@ -122,7 +122,7 @@ class MySQL
 	public function query($query = NULL)
 	{
 		$this->query = $query;
-		$this->results = [];
+		$this->results = new Collection;
 
 		$results = mysqli_query($this->connection, $query);
 
