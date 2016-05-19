@@ -76,10 +76,21 @@ trait Statement
 		return mysqli_insert_id($this->connection);
 	}
 
+	/**
+	 * Create a new table
+	 *
+	 * @param string $table
+	 * @param Closure $closure
+	 * @return bool
+	 */
 	public function create($table, Closure $closure)
 	{
 		$closure($blueprint = new Blueprint);
+
 		$this->statement = "CREATE TABLE IF NOT EXISTS $table ($blueprint)";
+
+		echo 'Created $table table';
+
 		return $this->get();
 	}
 
@@ -151,6 +162,11 @@ trait Statement
 		$this->statement = '';
 
 		return $this->results;
+	}
+
+	public function orderBy($column, $order = 'desc')
+	{
+		$this->add("ORDER BY $column $order");
 	}
 
 	/**

@@ -1,5 +1,7 @@
 <?php
 
+namespace Flo\MySQL;
+
 class Blueprint
 {
 	protected $columns;
@@ -11,7 +13,9 @@ class Blueprint
 
 	public function integer($name, $null = false, $unsigned = false)
 	{
-		$this->columns[] = "$name INT". $unsigned ? " UNSIGNED" : "" . $null ? " NOT NULL" : "";
+		$null = $null ? "" : " NOT NULL";
+		$unsigned = $unsigned ? " UNSIGNED" : "";
+		$this->columns[] = "$name INT$unsigned$null";
 	}
 
 	public function increments($name = 'id')
@@ -21,12 +25,14 @@ class Blueprint
 
 	public function string($name, $null = false, $length = 255)
 	{
-		$this->columns[] = "$name VARCHAR($length)". $null ? " NOT NULL" : "";
+		$null = $null ? "" : " NOT NULL";
+		$this->columns[] = "$name VARCHAR($length)$null";
 	}
 
 	public function text($name, $null = false)
 	{
-		$this->columns[] = "$name TEXT". $null ? " NOT NULL" : "";
+		$null = $null ? "" : " NOT NULL";
+		$this->columns[] = "$name TEXT$null";
 	}
 
 	public function custom($column)
