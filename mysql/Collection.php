@@ -2,7 +2,7 @@
 
 namespace Flo\MySQL;
 
-use IteratorAggregate;
+use IteratorAggregate, ArrayIterator;
 
 class Collection implements IteratorAggregate
 {
@@ -40,7 +40,7 @@ class Collection implements IteratorAggregate
 	 */
 	public function getIterator()
 	{
-		return $this->data;
+		return new ArrayIterator($this->data);
 	}
 
 	/**
@@ -51,6 +51,16 @@ class Collection implements IteratorAggregate
 	public function toArray()
 	{
 		return $this->data;
+	}
+
+	/**
+	 * Check if the collection is empty
+	 *
+	 * @return bool
+	 */
+	public function isEmpty()
+	{
+		return empty($this->data);
 	}
 
 	/**

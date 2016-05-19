@@ -2,6 +2,8 @@
 
 namespace Flo\MySQL;
 
+use Closure;
+
 /**
  * Trait for MySQL statement
  *
@@ -22,6 +24,13 @@ trait Statement
 	 * @var string
 	 */
 	protected $statement;
+
+	/**
+	 * Check if there is already a "WHERE" clause
+	 *
+	 * @var bool
+	 */
+	protected $hasWhere = false;
 
 	/**
 	 * Set table
@@ -45,9 +54,33 @@ trait Statement
 	public function select($statement = '*')
 	{
 		$table = $this->table;
-		$this->query = "SELECT $statement FROM $table ";
+		$this->statement = "SELECT $statement FROM $table ";
 
 		return $this;
+	}
+
+	/**
+	 * Insert statement
+	 *
+	 * @return int
+	 */
+	public function insert(array $columns = [], array $values = [])
+	{
+		$table = $this->table;
+		$columns = implode(',', $columns);
+		$values = '\'' . implode('\',\'', $values) . '\'';
+		$this->statement = "INSERT INTO $table ($columns) VALUES ($values)";
+
+		$this->get();
+
+		return mysqli_insert_id($this->connection);
+	}
+
+	public function create($table, Closure $closure)
+	{
+		$closure($blueprint = new Blueprint);
+		$this->statement = "CREATE TABLE IF NOT EXISTS $table ($blueprint)";
+		return $this->get();
 	}
 
 	/**
@@ -59,10 +92,20 @@ trait Statement
 	 */
 	public function where($col, $operator, $value = NULL)
 	{
-		if (is_null($value))
-			$this->add("WHERE $col = $operator ");
-		else
-			$this->add("WHERE $col $operator $value ");
+		$where = $this->hasWhere ? 'AND' : 'WHERE';
+		if (is_null($value)):
+			if (is_string($operator))
+				$this->add("$where $col = '$operator' ");
+			else
+				$this->add("$where $col = $operator ");
+			$this->hasWhere = true;
+		else:
+			if (is_string($value))
+				$this->add("$where $col $operator '$value' ");
+			else
+				$this->add("$where $col $operator $value ");
+			$this->hasWhere = true;
+		endif;
 
 		return $this;
 	}
@@ -104,6 +147,8 @@ trait Statement
 	public function get()
 	{
 		$this->query($this->statement);
+		$this->hasWhere = false;
+		$this->statement = '';
 
 		return $this->results;
 	}
