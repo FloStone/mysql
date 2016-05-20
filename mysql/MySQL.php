@@ -190,9 +190,4 @@ class MySQL
 	{
 		return $this->query;
 	}
-
-	public function resource()
-	{
-		return $this->resource;
-	}
 }

@@ -73,4 +73,14 @@ class Collection implements IteratorAggregate
 	{
 		$this->data[] = $item;
 	}
+
+	/**
+	 * Return the json form
+	 *
+	 * @return json
+	 */
+	public function toJson()
+	{
+		return json_encode($this->data);
+	}
 }
