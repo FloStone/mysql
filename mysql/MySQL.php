@@ -28,6 +28,13 @@ class MySQL
 	protected $password;
 
 	/**
+	 * Database name
+	 *
+	 * @var string
+	 */
+	protected $database;
+
+	/**
 	 * Connection to database
 	 *
 	 * @var resource

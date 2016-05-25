@@ -71,7 +71,17 @@ trait Statement
 		$table = $this->table;
 		$columns = implode(',', $columns);
 		$values = '\'' . implode('\',\'', $values) . '\'';
-		$this->statement = "INSERT INTO $table ($columns) VALUES ($values)";
+
+		if ($this->hasTimestamps())
+		{
+			$timestamp = "'" . date('Y-m-d H:i:s') . "'";
+			$this->statement = "INSERT INTO $table ($columns, created_at, updated_at) VALUES ($values, $timestamp, $timestamp)";	
+		}
+		else
+		{
+			$this->statement = "INSERT INTO $table ($columns) VALUES ($values)";
+		}
+		
 
 		$this->get();
 
@@ -101,7 +111,15 @@ trait Statement
 
 		$setstring = implode(', ', $setarray);
 
-		$this->statement = "UPDATE $table SET $setstring WHERE id = $id";
+		if ($this->hasTimestamps())
+		{
+			$timestamp = "'" . date('Y-m-d H:i:s') . "'";
+			$this->statement = "UPDATE $table SET $setstring, updated_at=$timestamp WHERE id = $id";
+		}
+		else
+		{
+			$this->statement = "UPDATE $table SET $setstring WHERE id = $id";	
+		}
 
 		$this->get();
 
@@ -151,6 +169,11 @@ trait Statement
 		return $this->get();
 	}
 
+	/**
+	 * Get all entries from the database
+	 *
+	 * @return Collection
+	 */
 	public function all()
 	{
 		$table = $this->table;
@@ -388,5 +411,34 @@ trait Statement
 	public function toSql()
 	{
 		return $this->statement;
+	}
+
+	/**
+	 * check wheather a column exists
+	 *
+	 * @return bool
+	 */
+	public function columnExists($column)
+	{
+		$db = $this->database;
+		$table = $this->table;
+
+		if ($this->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '$db' AND TABLE_NAME = '$table' AND COLUMN_NAME = '$column'")->isEmpty())
+			return false;
+		else
+			return true;
+	}
+
+	/**
+	 * Check if the table has timestamps
+	 *
+	 * @return bool
+	 */
+	public function hasTimestamps()
+	{
+		if ($this->columnExists('created_at') && $this->columnExists('updated_at'))
+			return true;
+		else
+			return false;
 	}
 }
