@@ -23,6 +23,8 @@ Generally it works as the Laravel Eloquent Builder, which it is based on.<br>
 ###Available Statements
 `public function insert(array $columns, array $values);`<br>
 `public function create($table, $closure)`<br>
+`public function update($id, array $columns, array $values);`<br>
+`public function drop($table);`<br>
 `public function table($table);`<br>
 `public function select($select = '*');`<br>
 `public function where($column, $operator, $value = NULL);`<br>
@@ -34,6 +36,7 @@ Generally it works as the Laravel Eloquent Builder, which it is based on.<br>
 `public function outerJoin($table, $primary, $operator, $other = NULL);`<br>
 `public function fullOuterJoin($table, $primary, $operator, $other = NULL);`<br>
 `public function orderBy($column, $order = 'desc');`<br>
+`public function all()`<br>
 `public function raw($sql);`<br>
 In some cases the operator may also be the value, in that case the operator will be set to '=' by default.<br>
 ###Create function closure
@@ -54,3 +57,5 @@ A basic example of a create query could look like this:<br>
 `public function text($name, $null = false);`<br>
 `public function custom($customquery);`<br>
 `public function timestamps();`<br>
+A custom query must be implemented as one column definition:<br>
+`tinyint(1) DEFAULT 0 NOT NULL`<br>
