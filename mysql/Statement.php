@@ -62,6 +62,8 @@ trait Statement
 	/**
 	 * Insert statement
 	 *
+	 * @param array $columns
+	 * @param array $values
 	 * @return int
 	 */
 	public function insert(array $columns = [], array $values = [])
@@ -74,6 +76,61 @@ trait Statement
 		$this->get();
 
 		return mysqli_insert_id($this->connection);
+	}
+
+	/**
+	 * Update statement
+	 *
+	 * @param int $id
+	 * @param array $columns
+	 * @param array $values
+	 * @return int
+	 */
+	public function update($id, array $columns = [], array $values = [])
+	{
+		$table = $this->table;
+
+		$merged = array_combine($columns, $values);
+
+		$setarray = [];
+
+		foreach($merged as $column => $value)
+		{
+			$setarray[] = "$column='$value'";
+		}
+
+		$setstring = implode(', ', $setarray);
+
+		$this->statement = "UPDATE $table SET $setstring WHERE id = $id";
+
+		$this->get();
+
+		return mysqli_insert_id($this->connection);
+	}
+
+	/**
+	 * Drop statement
+	 *
+	 * @param string|array $table
+	 * @return string
+	 */
+	public function drop($table)
+	{
+		if (is_array($table))
+		{
+			foreach($table as $t)
+			{
+				$this->statement = "DROP TABLE IF EXISTS $t";
+				$this->get();		
+			}
+		}
+		else
+		{
+			$this->statement = "DROP TABLE IF EXISTS $table";
+			$this->get();
+		}
+
+		return $this->results;
 	}
 
 	/**
@@ -91,6 +148,13 @@ trait Statement
 
 		echo "Created $table table\n";
 
+		return $this->get();
+	}
+
+	public function all()
+	{
+		$table = $this->table;
+		$this->statement = "SELECT * FROM $table";
 		return $this->get();
 	}
 
