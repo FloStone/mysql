@@ -43,7 +43,7 @@ class Blueprint
 	public function timestamps()
 	{
 		$this->columns[] = "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
-		$this->columns[] = "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP";
+		$this->columns[] = "updated_at TIMESTAMP DEFAULT 0 ON UPDATE CURRENT_TIMESTAMP";
 	}
 
 	public function __tostring()
