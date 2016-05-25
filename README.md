@@ -38,6 +38,7 @@ Generally it works as the Laravel Eloquent Builder, which it is based on.<br>
 `public function orderBy($column, $order = 'desc');`<br>
 `public function all()`<br>
 `public function raw($sql);`<br>
+`public function columnExists($column);`<br>
 In some cases the operator may also be the value, in that case the operator will be set to '=' by default.<br>
 ###Create function closure
 When you want to use the "create" function, you need to pass in a closure or anonymous function as second argument.<br>
