@@ -288,7 +288,7 @@ trait Statement
 		if (is_null($other))
 			$this->add("LEFT JOIN $table ON $primary = $operator");
 		else
-			$this->add("LEFT JOIN $table ON $primary, $operator, $other");
+			$this->add("LEFT JOIN $table ON $primary $operator $other");
 
 		return $this;
 	}
@@ -307,7 +307,7 @@ trait Statement
 		if (is_null($other))
 			$this->add("RIGHT JOIN $table ON $primary = $operator");
 		else
-			$this->add("RIGHT JOIN $table ON $primary, $operator, $other");
+			$this->add("RIGHT JOIN $table ON $primary $operator $other");
 
 		return $this;
 	}
@@ -326,7 +326,7 @@ trait Statement
 		if (is_null($other))
 			$this->add("OUTER JOIN $table ON $primary = $operator");
 		else
-			$this->add("OUTER JOIN $table ON $primary, $operator, $other");
+			$this->add("OUTER JOIN $table ON $primary $operator $other");
 
 		return $this;
 	}
@@ -345,7 +345,7 @@ trait Statement
 		if (is_null($other))
 			$this->add("FULL OUTER JOIN $table ON $primary = $operator");
 		else
-			$this->add("FULL OUTER $table ON $primary, $operator, $other");
+			$this->add("FULL OUTER $table ON $primary $operator $other");
 
 		return $this;
 	}
