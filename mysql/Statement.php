@@ -236,7 +236,7 @@ trait Statement
 	 */
 	public function whereIn($col, array $values = [])
 	{
-		$values = '(' . implode(',', $values) . ')';
+		$values = '(\'' . implode('\',\'', $values) . '\')';
 		$this->add("WHERE $col IN $values ");
 
 		return $this;
