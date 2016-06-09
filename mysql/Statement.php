@@ -209,6 +209,15 @@ trait Statement
 		return $this;
 	}
 
+	public function whereRaw($raw)
+	{
+		$where = $this->hasWhere ? 'AND' : 'WHERE';
+		
+		$this->add("$where $raw ");
+
+		return $this;
+	}
+
 	/**
 	 * OR Statement
 	 *
@@ -267,9 +276,9 @@ trait Statement
 	public function join($table, $primary, $operator, $other = NULL)
 	{
 		if (is_null($other))
-			$this->add("INNER JOIN $table ON $primary = $operator");
+			$this->add("INNER JOIN $table ON $primary = $operator ");
 		else
-			$this->add("INNER JOIN $table ON $primary, $operator, $other");
+			$this->add("INNER JOIN $table ON $primary, $operator, $other ");
 
 		return $this;
 	}
@@ -286,9 +295,9 @@ trait Statement
 	public function leftJoin($table, $primary, $operator, $other = NULL)
 	{
 		if (is_null($other))
-			$this->add("LEFT JOIN $table ON $primary = $operator");
+			$this->add("LEFT JOIN $table ON $primary = $operator ");
 		else
-			$this->add("LEFT JOIN $table ON $primary $operator $other");
+			$this->add("LEFT JOIN $table ON $primary $operator $other ");
 
 		return $this;
 	}
@@ -305,9 +314,9 @@ trait Statement
 	public function rightJoin($table, $primary, $operator, $other = NULL)
 	{
 		if (is_null($other))
-			$this->add("RIGHT JOIN $table ON $primary = $operator");
+			$this->add("RIGHT JOIN $table ON $primary = $operator ");
 		else
-			$this->add("RIGHT JOIN $table ON $primary $operator $other");
+			$this->add("RIGHT JOIN $table ON $primary $operator $other ");
 
 		return $this;
 	}
@@ -324,9 +333,9 @@ trait Statement
 	public function outerJoin($table, $primary, $operator, $other = NULL)
 	{
 		if (is_null($other))
-			$this->add("OUTER JOIN $table ON $primary = $operator");
+			$this->add("OUTER JOIN $table ON $primary = $operator ");
 		else
-			$this->add("OUTER JOIN $table ON $primary $operator $other");
+			$this->add("OUTER JOIN $table ON $primary $operator $other ");
 
 		return $this;
 	}
@@ -343,9 +352,9 @@ trait Statement
 	public function fullOuterJoin($table, $primary, $operator, $other = NULL)
 	{
 		if (is_null($other))
-			$this->add("FULL OUTER JOIN $table ON $primary = $operator");
+			$this->add("FULL OUTER JOIN $table ON $primary = $operator ");
 		else
-			$this->add("FULL OUTER $table ON $primary $operator $other");
+			$this->add("FULL OUTER $table ON $primary $operator $other ");
 
 		return $this;
 	}
@@ -359,7 +368,7 @@ trait Statement
 	 */
 	public function orderBy($column, $order = 'desc')
 	{
-		$this->add("ORDER BY $column $order");
+		$this->add("ORDER BY $column $order ");
 
 		return $this;
 	}
@@ -373,7 +382,7 @@ trait Statement
 	 */
 	public function raw($sql)
 	{
-		$this->add($sql);
+		$this->add("$sql ");
 
 		return $this;
 	}
