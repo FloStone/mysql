@@ -409,6 +409,16 @@ trait Statement
 	}
 
 	/**
+	 * Get the first entry of results
+	 *
+	 * @return object
+	 */
+	public function first()
+	{
+		return $this->get()->first();
+	}
+
+	/**
 	 * Add to statement
 	 *
 	 * @param string $query

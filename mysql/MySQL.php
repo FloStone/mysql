@@ -193,16 +193,6 @@ class MySQL
 	}
 
 	/**
-	 * Get first result from database
-	 *
-	 * @return object
-	 */
-	public function first()
-	{
-		return !empty($this->results) ? is_bool($this->results) ? $this->results : $this->results->first() : NULL;
-	}
-
-	/**
 	 * ToString Implementation
 	 *
 	 * @return string
