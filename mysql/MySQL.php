@@ -63,6 +63,13 @@ class MySQL
 	protected $resource;
 
 	/**
+	 * Model to use when returning queries
+	 *
+	 * @var object
+	 */
+	protected $model;
+
+	/**
 	 * Initialize class
 	 *
 	 * @param string $host
@@ -151,7 +158,14 @@ class MySQL
 
 		while($row = mysqli_fetch_assoc($results))
 		{
-			$result = new MySQLResult($row);
+			if ($this->model)
+			{
+				$model = $this->model;
+				$result = new $model($row);
+			}
+			else
+				$result = new MySQLResult($row);
+
 			$this->results->add($result);
 		}
 

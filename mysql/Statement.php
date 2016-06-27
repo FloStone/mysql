@@ -33,6 +33,13 @@ trait Statement
 	protected $hasWhere = false;
 
 	/**
+	 * Model to use when returning queries
+	 *
+	 * @var object
+	 */
+	protected $model = NULL;
+
+	/**
 	 * Set table
 	 *
 	 * @param string $table
@@ -449,5 +456,23 @@ trait Statement
 			return true;
 		else
 			return false;
+	}
+
+	/**
+	 * Bind results to a given Model
+	 *
+	 * @param string $classname
+	 * @return object
+	 */
+	public function toModel($classname)
+	{
+		$model = new $classname([]);
+
+		if (!$model instanceof Model)
+			throw new \Exception("$classname must be implementing Flo\MySQL\Model");
+
+		$this->model = $classname;
+
+		return $this->get();
 	}
 }
