@@ -63,13 +63,6 @@ class MySQL
 	protected $resource;
 
 	/**
-	 * Model to use when returning queries
-	 *
-	 * @var object
-	 */
-	protected $model;
-
-	/**
 	 * Initialize class
 	 *
 	 * @param string $host
