@@ -219,9 +219,8 @@ trait Statement
 	public function whereRaw($raw)
 	{
 		$where = $this->hasWhere ? 'AND' : 'WHERE';
-		
 		$this->add("$where $raw ");
-
+        $this->hasWhere = true;
 		return $this;
 	}
 
@@ -252,9 +251,10 @@ trait Statement
 	 */
 	public function whereIn($col, array $values = [])
 	{
+        $where = $this->hasWhere ? 'AND' : 'WHERE';
 		$values = '(\'' . implode('\',\'', $values) . '\')';
-		$this->add("WHERE $col IN $values ");
-
+		$this->add("$where $col IN $values ");
+        $this->hasWhere = true;
 		return $this;
 	}
 
@@ -379,6 +379,18 @@ trait Statement
 
 		return $this;
 	}
+
+     /**
+      * Group by statement
+      *
+      * @param string $column
+      * @return this
+      */
+     public function groupBy($column)
+     {
+         $this->add("GROUP BY $column");
+         return $this;
+     }
 
 	/**
 	 * Add a custom statement to the sql query
