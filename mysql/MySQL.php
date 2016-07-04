@@ -63,13 +63,6 @@ class MySQL
 	protected $resource;
 
 	/**
-	 * Model to use when returning queries
-	 *
-	 * @var object
-	 */
-	protected $model;
-
-	/**
 	 * Initialize class
 	 *
 	 * @param string $host
@@ -117,7 +110,7 @@ class MySQL
 
 		if (!$this->connection)
 			throw new Exeption('Could not connect to database');
-
+		
 		$this->selectdb($this->database);
 	}
 
