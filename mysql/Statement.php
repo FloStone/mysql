@@ -380,17 +380,36 @@ trait Statement
 		return $this;
 	}
 
-     /**
-      * Group by statement
-      *
-      * @param string $column
-      * @return this
-      */
-     public function groupBy($column)
-     {
-         $this->add("GROUP BY $column");
-         return $this;
-     }
+	/**
+	 * Group by statement
+	 *
+	 * @param string $column
+ 	 * @return this
+	 */
+	public function groupBy($column)
+	{
+		$this->add("GROUP BY $column ");
+
+		return $this;
+	}
+
+	/**
+	 * Having statement
+	 *
+	 * @param string one
+	 * @param string $operator
+	 * @param string $two
+	 * @return this
+	 */
+	public function having($one, $operator, $two = NULL)
+	{
+		if (is_null($two))
+			$this->add("HAVING $one = $operator");
+		else
+			$this->add("HAVING $one $operator $two");
+
+		return $this;
+	}
 
 	/**
 	 * Add a custom statement to the sql query
