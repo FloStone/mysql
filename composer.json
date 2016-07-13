@@ -1,7 +1,7 @@
 {
     "name": "flo5581/mysql-plainphp",
     "description": "MySQL Library for plain php and other applications",
-    "version": "1.0.12",
+    "version": "1.0.13",
     "authors": [
         {
             "name": "Flo Stone"
