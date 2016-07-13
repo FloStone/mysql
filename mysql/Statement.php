@@ -67,6 +67,19 @@ trait Statement
 	}
 
 	/**
+	 * Delete statement
+	 *
+	 * @return this
+	 */
+	public function delete()
+	{
+		$table = $this->table;
+		$this->statement = "DELETE FROM $table ";
+
+		return $this;
+	}
+
+	/**
 	 * Insert statement
 	 *
 	 * @param array $columns
@@ -418,6 +431,16 @@ trait Statement
 		$this->statement = '';
 
 		return $this->results;
+	}
+
+	/**
+	 * Execute the query
+	 *
+	 * @return bool|results
+	 */
+	public function exec()
+	{
+		return $this->get();
 	}
 
 	/**
