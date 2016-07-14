@@ -105,4 +105,9 @@ class Blueprint
 	{
 		return implode(',', $this->columns);
 	}
+
+	public function getColumns()
+	{
+		return $this->columns;
+	}
 }

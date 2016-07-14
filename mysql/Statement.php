@@ -190,6 +190,31 @@ trait Statement
 	}
 
 	/**
+	 * Alter table statement
+	 *
+	 * @param string $table
+	 * @param Closure $closure
+	 * @return bool
+	 */
+	public function alter($table, Closure $closure)
+	{
+		$closure($blueprint = new Blueprint);
+
+		$adds = [];
+
+		foreach ($blueprint->getColumns() as $col)
+		{
+			$adds[] = "ADD COLUMN $col ";
+		}
+
+		$adds = implode(', ', $adds);
+
+		$this->statement = "ALTER TABLE $table $adds";
+
+		return $this->get();
+	}
+
+	/**
 	 * Get all entries from the database
 	 *
 	 * @return Collection
