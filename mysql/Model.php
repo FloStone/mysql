@@ -28,4 +28,9 @@ class Model
 	{
 		unset($this->$key);
 	}
+
+	public function save()
+	{
+		
+	}
 }

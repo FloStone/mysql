@@ -89,6 +89,13 @@ trait Statement
 	public function insert(array $columns = [], array $values = [])
 	{
 		$table = $this->table;
+
+		if (empty($values))
+		{
+			$values = array_values($columns);
+			$columns = array_keys($columns);
+		}
+
 		$columns = implode(',', $columns);
 		$values = '\'' . implode('\',\'', $values) . '\'';
 
@@ -120,7 +127,10 @@ trait Statement
 	{
 		$table = $this->table;
 
-		$merged = array_combine($columns, $values);
+		if (empty($values))
+			$merged = $columns;
+		else
+			$merged = array_combine($columns, $values);
 
 		$setarray = [];
 

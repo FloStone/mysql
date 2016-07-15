@@ -2,6 +2,8 @@
 
 namespace Flo\MySQL;
 
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 class MySQL
 {
 	use Statement;
@@ -109,7 +111,7 @@ class MySQL
 		$this->connection = mysqli_connect($this->host, $this->username, $this->password, $this->database);
 
 		if (!$this->connection)
-			throw new Exeption('Could not connect to database');
+			throw new Exception('Could not connect to database');
 		
 		$this->selectdb($this->database);
 	}
