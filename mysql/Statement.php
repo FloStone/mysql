@@ -321,9 +321,12 @@ trait Statement
 	 * @param int $limit
 	 * @return this
 	 */
-	public function limit($limit = 10)
+	public function limit($offset = 10, $limit = null)
 	{
-		$this->add("LIMIT $limit");
+        if($limit !== null)
+		    $this->add("LIMIT $offset, $limit"); // Two parameters
+        else
+            $this->add("LIMIT $offset"); //One parameter
 
 		return $this;
 	}
@@ -506,6 +509,20 @@ trait Statement
 		return $this->get()->first();
 	}
 
+    /**
+     * Execute a count statement
+     *
+     * @return bool|results
+     */
+    public function count()
+    {
+        $this->select("COUNT(*) as count");
+        $this->query($this->statement);
+        $this->hasWhere = false;
+        $this->statement = '';
+        $count = intval($this->results->first()->count);
+        return $count;
+    }
 	/**
 	 * Add to statement
 	 *
