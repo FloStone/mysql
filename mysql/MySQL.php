@@ -9,34 +9,6 @@ class MySQL
 	use Statement;
 
 	/**
-	 * Hostname of mysql database
-	 *
-	 * @var string
-	 */
-	protected $host;
-
-	/**
-	 * Username of Database
-	 *
-	 * @var string
-	 */
-	protected $username;
-
-	/**
-	 * Password of Database
-	 *
-	 * @var string
-	 */
-	protected $password;
-
-	/**
-	 * Database name
-	 *
-	 * @var string
-	 */
-	protected $database;
-
-	/**
 	 * Connection to database
 	 *
 	 * @var resource
@@ -76,58 +48,29 @@ class MySQL
 	public function __construct($host, $username = NULL, $password = NULL, $database = NULL)
 	{
 		if (is_array($host))
-		{
-			$this->host = $host['host'];
-			$this->username = $host['username'];
-			$this->password = $host['password'];
-			$this->database = $host['database'];
-		}
+			$credentials = $host;
 		else
-		{
-			$this->host = $host;
-			$this->username = $username;
-			$this->password = $password;
-			$this->database = $database;
-		}
+			$credentials = ['host' => $host, 'username' => $username, 'password' => $password, 'database' => $database];
+
+		$this->connection = Connection::getInstance() ?: new Connection($credentials);
 
 		$this->results = new Collection;
 
-		$this->connection();
 		$this->query("SET NAMES UTF8");
 	}
 
+	/**
+	 * Static Call alias
+	 *
+	 * @param string|array $host
+	 * @param string $username
+	 * @param string $password
+	 * @param string $database
+	 * @return Connection
+	 */
 	public static function connect($host, $username = NULL, $password = NULL, $database = NULL)
 	{
 		return new self($host, $username, $password, $database);
-	}
-
-	/**
-	 * Connect to database
-	 *
-	 * @return void
-	 */
-	protected function connection()
-	{
-		$this->connection = mysqli_connect($this->host, $this->username, $this->password, $this->database);
-
-		if (!$this->connection)
-			throw new Exception('Could not connect to database');
-		
-		$this->selectdb($this->database);
-	}
-
-	/**
-	 * Select database
-	 *
-	 * @param string $db
-	 * @return this
-	 */
-	public function selectdb($db)
-	{
-		if(!mysqli_select_db($this->connection, $db))
-			throw new Exception('Database does not exist');
-
-		return $this;
 	}
 
 	/**
@@ -141,7 +84,7 @@ class MySQL
 		$this->query = $query;
 		$this->results = new Collection;
 
-		$results = mysqli_query($this->connection, $query);
+		$results = mysqli_query($this->connection->getConnection(), $query);
 
 		$this->resource = $results;
 

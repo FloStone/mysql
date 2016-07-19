@@ -11,6 +11,8 @@ use Closure;
  */
 trait Statement
 {
+	const INITIAL_STATEMENT = 'initial_statement';
+
 	/**
 	 * Table to execute query on
 	 *
@@ -24,6 +26,13 @@ trait Statement
 	 * @var string
 	 */
 	protected $statement;
+
+	/**
+	 * All statements in an array
+	 *
+	 * @var array
+	 */
+	protected $statements = [];
 
 	/**
 	 * Check if there is already a "WHERE" clause
@@ -61,7 +70,7 @@ trait Statement
 	public function select($statement = '*')
 	{
 		$table = $this->table;
-		$this->statement = "SELECT $statement FROM $table ";
+		$this->add("SELECT $statement FROM $table ", self::INITIAL_STATEMENT);
 
 		return $this;
 	}
@@ -74,7 +83,7 @@ trait Statement
 	public function delete()
 	{
 		$table = $this->table;
-		$this->statement = "DELETE FROM $table ";
+		$this->add("DELETE FROM $table ", self::INITIAL_STATEMENT);
 
 		return $this;
 	}
@@ -488,16 +497,6 @@ trait Statement
 	}
 
 	/**
-	 * Execute the query
-	 *
-	 * @return bool|results
-	 */
-	public function exec()
-	{
-		return $this->get();
-	}
-
-	/**
 	 * Get the first entry of results
 	 *
 	 * @return object
@@ -513,9 +512,12 @@ trait Statement
 	 * @param string $query
 	 * @return void
 	 */
-	private function add($query)
+	private function add($query, $key = NULL)
 	{
-		$this->statement = $this->statement . $query;
+		if ($key)
+			$this->statements[$key] = $query;
+		else
+			$this->statements[] = $query;
 	}
 
 	/**
