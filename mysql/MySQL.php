@@ -8,6 +8,8 @@ class MySQL
 {
 	use Statement;
 
+	const INITIAL_STATEMENT = 'initial_statement';
+
 	/**
 	 * Connection to database
 	 *
