@@ -30,7 +30,7 @@ trait Statement
 	 *
 	 * @var array
 	 */
-	protected $statements = [];
+	protected $statements;
 
 	/**
 	 * Check if there is already a "WHERE" clause
@@ -45,6 +45,11 @@ trait Statement
 	 * @var object
 	 */
 	protected $model = NULL;
+
+	public function traitConstructor()
+	{
+		$this->statements = new StatementCollection;
+	}
 
 	/**
 	 * Set table
@@ -68,7 +73,7 @@ trait Statement
 	public function select($statement = '*')
 	{
 		$table = $this->table;
-		$this->add("SELECT $statement FROM $table", self::INITIAL_STATEMENT);
+		$this->statements->add(StatementCollection::INITIAL, "SELECT $statement FROM $table");
 
 		return $this;
 	}
@@ -81,7 +86,7 @@ trait Statement
 	public function delete()
 	{
 		$table = $this->table;
-		$this->add("DELETE FROM $table", self::INITIAL_STATEMENT);
+		$this->add(StatementCollection::INITIAL, "DELETE FROM $table");
 
 		return $this->get();
 	}
@@ -256,15 +261,15 @@ trait Statement
 		$where = $this->hasWhere ? 'AND' : 'WHERE';
 		if (is_null($value)):
 			if (is_string($operator))
-				$this->add("$where $col = '$operator'");
+				$this->statements->add(StatementCollection::WHERE, "$where $col = '$operator'");
 			else
-				$this->add("$where $col = $operator");
+				$this->statements->add(StatementCollection::WHERE, "$where $col = $operator");
 			$this->hasWhere = true;
 		else:
 			if (is_string($value))
-				$this->add("$where $col $operator '$value'");
+				$this->statements->add(StatementCollection::WHERE, "$where $col $operator '$value'");
 			else
-				$this->add("$where $col $operator $value");
+				$this->statements->add(StatementCollection::WHERE, "$where $col $operator $value");
 			$this->hasWhere = true;
 		endif;
 
@@ -274,7 +279,7 @@ trait Statement
 	public function whereRaw($raw)
 	{
 		$where = $this->hasWhere ? 'AND' : 'WHERE';
-		$this->add("$where $raw");
+		$this->statements->add(StatementCollection::WHERE, "$where $raw");
         $this->hasWhere = true;
 		return $this;
 	}
@@ -290,9 +295,9 @@ trait Statement
 	public function orWhere($col, $oprator, $value = NULL)
 	{
 		if (is_null($value))
-			$this->add("OR $col = $operator");
+			$this->statements->add(StatementCollection::WHERE, "OR $col = $operator");
 		else
-			$this->add("OR $col $operator $value");
+			$this->statements->add(StatementCollection::WHERE, "OR $col $operator $value");
 
 		return $this;
 	}
@@ -308,7 +313,7 @@ trait Statement
 	{
         $where = $this->hasWhere ? 'AND' : 'WHERE';
 		$values = '(\'' . implode('\',\'', $values) . '\')';
-		$this->add("$where $col IN $values");
+		$this->statements->add(StatementCollection::WHERE, "$where $col IN $values");
         $this->hasWhere = true;
 		return $this;
 	}
@@ -322,9 +327,9 @@ trait Statement
 	public function limit($offset = 10, $limit = null)
 	{
         if($limit !== null)
-		    $this->add("LIMIT $offset, $limit"); // Two parameters
+		    $this->add(StatementCollection::LIMIT, "LIMIT $offset, $limit"); // Two parameters
         else
-            $this->add("LIMIT $offset"); //One parameter
+            $this->add(StatementCollection::LIMIT, "LIMIT $offset"); //One parameter
 
 		return $this;
 	}
@@ -341,9 +346,9 @@ trait Statement
 	public function join($table, $primary, $operator, $other = NULL)
 	{
 		if (is_null($other))
-			$this->add("INNER JOIN $table ON $primary = $operator");
+			$this->statements->add(StatementCollection::JOIN, "INNER JOIN $table ON $primary = $operator");
 		else
-			$this->add("INNER JOIN $table ON $primary, $operator, $other");
+			$this->statements->add(StatementCollection::JOIN, "INNER JOIN $table ON $primary, $operator, $other");
 
 		return $this;
 	}
@@ -360,9 +365,9 @@ trait Statement
 	public function leftJoin($table, $primary, $operator, $other = NULL)
 	{
 		if (is_null($other))
-			$this->add("LEFT JOIN $table ON $primary = $operator");
+			$this->statements->add(StatementCollection::JOIN, "LEFT JOIN $table ON $primary = $operator");
 		else
-			$this->add("LEFT JOIN $table ON $primary $operator $other");
+			$this->statements->add(StatementCollection::JOIN, "LEFT JOIN $table ON $primary $operator $other");
 
 		return $this;
 	}
@@ -379,9 +384,9 @@ trait Statement
 	public function rightJoin($table, $primary, $operator, $other = NULL)
 	{
 		if (is_null($other))
-			$this->add("RIGHT JOIN $table ON $primary = $operator");
+			$this->statements->add(StatementCollection::JOIN, "RIGHT JOIN $table ON $primary = $operator");
 		else
-			$this->add("RIGHT JOIN $table ON $primary $operator $other");
+			$this->statements->add(StatementCollection::JOIN, "RIGHT JOIN $table ON $primary $operator $other");
 
 		return $this;
 	}
@@ -398,9 +403,9 @@ trait Statement
 	public function outerJoin($table, $primary, $operator, $other = NULL)
 	{
 		if (is_null($other))
-			$this->add("OUTER JOIN $table ON $primary = $operator");
+			$this->statements->add(StatementCollection::JOIN, "OUTER JOIN $table ON $primary = $operator");
 		else
-			$this->add("OUTER JOIN $table ON $primary $operator $other");
+			$this->statements->add(StatementCollection::JOIN, "OUTER JOIN $table ON $primary $operator $other");
 
 		return $this;
 	}
@@ -417,9 +422,9 @@ trait Statement
 	public function fullOuterJoin($table, $primary, $operator, $other = NULL)
 	{
 		if (is_null($other))
-			$this->add("FULL OUTER JOIN $table ON $primary = $operator");
+			$this->statements->add(StatementCollection::JOIN, "FULL OUTER JOIN $table ON $primary = $operator");
 		else
-			$this->add("FULL OUTER $table ON $primary $operator $other");
+			$this->statements->add(StatementCollection::JOIN, "FULL OUTER $table ON $primary $operator $other");
 
 		return $this;
 	}
@@ -433,7 +438,7 @@ trait Statement
 	 */
 	public function orderBy($column, $order = 'desc')
 	{
-		$this->add("ORDER BY $column $order");
+		$this->statements->add(StatementCollection::ORDERBY, "ORDER BY $column $order");
 
 		return $this;
 	}
@@ -446,7 +451,7 @@ trait Statement
 	 */
 	public function groupBy($column)
 	{
-		$this->add("GROUP BY $column");
+		$this->statements->add(StatementCollection::GROUPBY, "GROUP BY $column");
 
 		return $this;
 	}
@@ -462,9 +467,9 @@ trait Statement
 	public function having($one, $operator, $two = NULL)
 	{
 		if (is_null($two))
-			$this->add("HAVING $one = $operator");
+			$this->statements->add(StatementCollection::HAVING, "HAVING $one = $operator");
 		else
-			$this->add("HAVING $one $operator $two");
+			$this->statements->add(StatementCollection::HAVING, "HAVING $one $operator $two");
 
 		return $this;
 	}
@@ -478,7 +483,7 @@ trait Statement
 	 */
 	public function raw($sql)
 	{
-		$this->add("$sql");
+		$this->statement = $sql;
 
 		return $this;
 	}
@@ -490,7 +495,7 @@ trait Statement
 	 */
 	public function get()
 	{
-		$this->buildStatement();
+		$this->statement = $this->build();
 		$this->query($this->statement);
 
 		return $this->results;
@@ -513,26 +518,11 @@ trait Statement
      */
     public function count()
     {
-        $this->add("SELECT COUNT(*) as count ", self::INITIAL_STATEMENT);
-        $this->query($this->statement);
+        $this->statements->add(StatementCollection::INITIAL, "SELECT COUNT(*) as count ");
+        $this->get();
 
-        $count = (int) $this->results->first()->count;
-
-        return $count;
+        return (int) $this->results->first()->count;
     }
-	/**
-	 * Add to statement
-	 *
-	 * @param string $query
-	 * @return void
-	 */
-	private function add($query, $key = NULL)
-	{
-		if ($key)
-			$this->statements[$key] = $query;
-		else
-			$this->statements[] = $query;
-	}
 
 	/**
 	 * Print the SQL query
@@ -541,8 +531,7 @@ trait Statement
 	 */
 	public function toSql()
 	{
-		$this->buildStatement();
-		return $this->statement;
+		return $this->statements->build();
 	}
 
 	/**
@@ -590,23 +579,5 @@ trait Statement
 		$this->model = $classname;
 
 		return $this->get();
-	}
-
-	public function buildStatement()
-	{
-		if (empty($this->statements))
-			return;
-
-		if (isset($this->statements[self::INITIAL_STATEMENT]))
-		{
-			$initial = "{$this->statements[self::INITIAL_STATEMENT]} ";
-			unset($this->statements[self::INITIAL_STATEMENT]);
-		}
-		else
-			$initial = '';
-
-		$statement = implode(' ', $this->statements);
-
-		$this->statement = $initial . $statement;
 	}
 }

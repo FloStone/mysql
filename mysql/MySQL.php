@@ -8,8 +8,6 @@ class MySQL
 {
 	use Statement;
 
-	const INITIAL_STATEMENT = 'initial_statement';
-
 	/**
 	 * Connection to database
 	 *
@@ -49,6 +47,8 @@ class MySQL
 	 */
 	public function __construct($host, $username = NULL, $password = NULL, $database = NULL)
 	{
+		$this->traitConstructor();
+
 		if (is_array($host))
 			$credentials = $host;
 		else
