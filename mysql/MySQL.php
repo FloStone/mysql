@@ -86,7 +86,13 @@ class MySQL
 		$this->query = $query;
 		$this->results = new Collection;
 
-		$results = mysqli_query($this->connection->getConnection(), $query);
+		try {
+			$results = mysqli_query($this->connection->getConnection(), $query);
+		}
+		catch (mysqli_sql_exception $e)
+		{
+			throw $e;
+		}
 
 		$this->resource = $results;
 

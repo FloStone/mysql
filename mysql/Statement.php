@@ -46,6 +46,11 @@ trait Statement
 	 */
 	protected $model = NULL;
 
+	/**
+	 * Constructor for this trait
+	 *
+	 * @return void
+	 */
 	public function traitConstructor()
 	{
 		$this->statements = new StatementCollection;
@@ -327,9 +332,9 @@ trait Statement
 	public function limit($offset = 10, $limit = null)
 	{
         if($limit !== null)
-		    $this->add(StatementCollection::LIMIT, "LIMIT $offset, $limit"); // Two parameters
+		    $this->statements->add(StatementCollection::LIMIT, "LIMIT $offset, $limit"); // Two parameters
         else
-            $this->add(StatementCollection::LIMIT, "LIMIT $offset"); //One parameter
+            $this->statements->add(StatementCollection::LIMIT, "LIMIT $offset"); //One parameter
 
 		return $this;
 	}
@@ -495,7 +500,7 @@ trait Statement
 	 */
 	public function get()
 	{
-		$this->statement = $this->build();
+		$this->statement = $this->statements->build();
 		$this->query($this->statement);
 
 		return $this->results;
@@ -518,10 +523,10 @@ trait Statement
      */
     public function count()
     {
-        $this->statements->add(StatementCollection::INITIAL, "SELECT COUNT(*) as count ");
-        $this->get();
+    	$countInstance = clone $this;
+    	$countInstance->cloned = true;
 
-        return (int) $this->results->first()->count;
+    	return $countInstance->makeCountQuery();
     }
 
 	/**
@@ -579,5 +584,22 @@ trait Statement
 		$this->model = $classname;
 
 		return $this->get();
+	}
+
+	public function makeCountQuery()
+	{
+		$table = $this->table;
+        $this->statements->add(StatementCollection::INITIAL, "SELECT COUNT(*) as count FROM $table");
+        $this->get();
+
+        return (int) $this->results->first()->count;
+	}
+
+	public function __clone()
+	{
+		$sccopy = clone $this->statements;
+		$this->statements = $sccopy;
+
+		return $this;
 	}
 }
