@@ -492,8 +492,6 @@ trait Statement
 	{
 		$this->buildStatement();
 		$this->query($this->statement);
-		$this->hasWhere = false;
-		$this->statement = '';
 
 		return $this->results;
 	}
@@ -543,6 +541,7 @@ trait Statement
 	 */
 	public function toSql()
 	{
+		$this->buildStatement();
 		return $this->statement;
 	}
 
