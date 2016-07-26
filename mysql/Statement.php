@@ -19,7 +19,7 @@ trait Statement
 	protected $table;
 
 	/**
-	 *MySQL statement
+	 * MySQL statement
 	 *
 	 * @var string
 	 */
@@ -109,9 +109,14 @@ trait Statement
 
 		if (empty($values))
 		{
-			$values = array_values($columns);
+			$values = array_map(function($value){
+				return addslashes($value);
+			}, array_values($columns));
+			
 			$columns = array_keys($columns);
 		}
+
+
 
 		$columns = implode(',', $columns);
 		$values = '\'' . implode('\',\'', $values) . '\'';
@@ -129,7 +134,7 @@ trait Statement
 
 		$this->get();
 
-		return mysqli_insert_id($this->connection);
+		return mysqli_insert_id($this->connection->getConnection());
 	}
 
 	/**
@@ -500,7 +505,8 @@ trait Statement
 	 */
 	public function get()
 	{
-		$this->statement = $this->statements->build();
+		if (!$this->statement)
+			$this->statement = $this->statements->build();
 		$this->query($this->statement);
 
 		return $this->results;
@@ -546,7 +552,7 @@ trait Statement
 	 */
 	public function columnExists($column)
 	{
-		$db = $this->database;
+		$db = DB_DATABASE;
 		$table = $this->table;
 
 		if ($this->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '$db' AND TABLE_NAME = '$table' AND COLUMN_NAME = '$column'")->isEmpty())
