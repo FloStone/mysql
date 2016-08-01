@@ -19,7 +19,7 @@ trait Statement
 	protected $table;
 
 	/**
-	 *MySQL statement
+	 * MySQL statement
 	 *
 	 * @var string
 	 */
@@ -46,6 +46,11 @@ trait Statement
 	 */
 	protected $model = NULL;
 
+	/**
+	 * Constructor for this trait
+	 *
+	 * @return void
+	 */
 	public function traitConstructor()
 	{
 		$this->statements = new StatementCollection;
@@ -104,9 +109,14 @@ trait Statement
 
 		if (empty($values))
 		{
-			$values = array_values($columns);
+			$values = array_map(function($value){
+				return addslashes($value);
+			}, array_values($columns));
+			
 			$columns = array_keys($columns);
 		}
+
+
 
 		$columns = implode(',', $columns);
 		$values = '\'' . implode('\',\'', $values) . '\'';
@@ -124,7 +134,7 @@ trait Statement
 
 		$this->get();
 
-		return mysqli_insert_id($this->connection);
+		return mysqli_insert_id($this->connection->getConnection());
 	}
 
 	/**
@@ -327,9 +337,9 @@ trait Statement
 	public function limit($offset = 10, $limit = null)
 	{
         if($limit !== null)
-		    $this->add(StatementCollection::LIMIT, "LIMIT $offset, $limit"); // Two parameters
+		    $this->statements->add(StatementCollection::LIMIT, "LIMIT $offset, $limit"); // Two parameters
         else
-            $this->add(StatementCollection::LIMIT, "LIMIT $offset"); //One parameter
+            $this->statements->add(StatementCollection::LIMIT, "LIMIT $offset"); //One parameter
 
 		return $this;
 	}
@@ -495,7 +505,8 @@ trait Statement
 	 */
 	public function get()
 	{
-		$this->statement = $this->build();
+		if (!$this->statement)
+			$this->statement = $this->statements->build();
 		$this->query($this->statement);
 
 		return $this->results;
@@ -518,10 +529,10 @@ trait Statement
      */
     public function count()
     {
-        $this->statements->add(StatementCollection::INITIAL, "SELECT COUNT(*) as count ");
-        $this->get();
+    	$countInstance = clone $this;
+    	$countInstance->cloned = true;
 
-        return (int) $this->results->first()->count;
+    	return $countInstance->makeCountQuery();
     }
 
 	/**
@@ -541,7 +552,7 @@ trait Statement
 	 */
 	public function columnExists($column)
 	{
-		$db = $this->database;
+		$db = DB_DATABASE;
 		$table = $this->table;
 
 		if ($this->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '$db' AND TABLE_NAME = '$table' AND COLUMN_NAME = '$column'")->isEmpty())
@@ -579,5 +590,22 @@ trait Statement
 		$this->model = $classname;
 
 		return $this->get();
+	}
+
+	public function makeCountQuery()
+	{
+		$table = $this->table;
+        $this->statements->add(StatementCollection::INITIAL, "SELECT COUNT(*) as count FROM $table");
+        $this->get();
+
+        return (int) $this->results->first()->count;
+	}
+
+	public function __clone()
+	{
+		$sccopy = clone $this->statements;
+		$this->statements = $sccopy;
+
+		return $this;
 	}
 }
