@@ -86,7 +86,7 @@ trait Statement
 	public function delete()
 	{
 		$table = $this->table;
-		$this->add(StatementCollection::INITIAL, "DELETE FROM $table");
+		$this->statements->add(StatementCollection::INITIAL, "DELETE FROM $table");
 
 		return $this->get();
 	}
