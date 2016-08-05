@@ -555,10 +555,36 @@ trait Statement
 		$db = DB_DATABASE;
 		$table = $this->table;
 
-		if ($this->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '$db' AND TABLE_NAME = '$table' AND COLUMN_NAME = '$column'")->isEmpty())
+		if ($this->getSchema()->isEmpty())
 			return false;
 		else
 			return true;
+	}
+
+	/**
+	 * Get the type of a column
+	 *
+	 * @param string $column
+	 * @return string
+	 */
+	public function getColumnType($column)
+	{
+		$db = DB_DATABASE;
+		$table = $this->table;
+
+		return $this->getSchema($column, 'COLUMN_TYPE')->COLUMN_TYPE;
+	}
+
+	/**
+	 * Get the schema of a column
+	 *
+	 * @param string $column
+	 * @param string $select
+	 * @return MySQLResult
+	 */
+	public function getSchema($column, $select = '*')
+	{
+		return $this->query("SELECT $select FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '$db' AND TABLE_NAME = '$table' AND COLUMN_NAME = '$column'");
 	}
 
 	/**
