@@ -26,6 +26,11 @@ class StatementCollection
 
 	protected $limit;
 
+	public function hasInitial()
+	{
+		return $this->initial ? true : false;
+	}
+
 	public function add($type, $query)
 	{
 		switch ($type)

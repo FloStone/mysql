@@ -69,6 +69,11 @@ trait Statement
 		return $this;
 	}
 
+	public function find($id)
+	{
+		return $this->where('id', $id)->first();
+	}
+
 	/**
 	 * Select statement
 	 *
@@ -115,8 +120,6 @@ trait Statement
 			
 			$columns = array_keys($columns);
 		}
-
-
 
 		$columns = implode(',', $columns);
 		$values = '\'' . implode('\',\'', $values) . '\'';
@@ -505,8 +508,12 @@ trait Statement
 	 */
 	public function get()
 	{
+		if (!$this->statements->hasInitial())
+			$this->select();
+		
 		if (!$this->statement)
 			$this->statement = $this->statements->build();
+
 		$this->query($this->statement);
 
 		return $this->results;
@@ -519,7 +526,7 @@ trait Statement
 	 */
 	public function first()
 	{
-		return $this->get()->first();
+		return $this->limit(1)->get()->first();
 	}
 
     /**
@@ -554,8 +561,8 @@ trait Statement
 	{
 		$db = DB_DATABASE;
 		$table = $this->table;
-
-		if ($this->getSchema()->isEmpty())
+		
+		if (is_null($this->getSchema($column)))
 			return false;
 		else
 			return true;
@@ -569,9 +576,6 @@ trait Statement
 	 */
 	public function getColumnType($column)
 	{
-		$db = DB_DATABASE;
-		$table = $this->table;
-
 		return $this->getSchema($column, 'COLUMN_TYPE')->COLUMN_TYPE;
 	}
 
@@ -584,7 +588,10 @@ trait Statement
 	 */
 	public function getSchema($column, $select = '*')
 	{
-		return $this->query("SELECT $select FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '$db' AND TABLE_NAME = '$table' AND COLUMN_NAME = '$column'");
+		$db = DB_DATABASE;
+		$table = $this->table;
+
+		return $this->query("SELECT $select FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '$db' AND TABLE_NAME = '$table' AND COLUMN_NAME = '$column'")->first();
 	}
 
 	/**
