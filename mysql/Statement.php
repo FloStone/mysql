@@ -224,6 +224,20 @@ trait Statement
 		return $this->get();
 	}
 
+	public function createBasic($table, Closure $closure)
+	{
+		$blueprint = new Blueprint;
+		$blueprint->increments();
+		$closure($blueprint);
+		$blueprint->timestamps();
+
+		$this->statement = "CREATE TABLE IF NOT EXISTS $table ($blueprint)";
+
+		echo "Created $table table\n";
+
+		return $this->get();	
+	}
+
 	/**
 	 * Alter table statement
 	 *
