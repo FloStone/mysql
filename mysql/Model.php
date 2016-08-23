@@ -54,7 +54,7 @@ class Model
 
 	public function __set($key, $value)
 	{
-		$this->attributes[$key] = addslashes($value);
+		$this->attributes[$key] = is_string($value) ? addslashes($value) : $value;
 	}
 
 	public function __get($key)
