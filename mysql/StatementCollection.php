@@ -11,6 +11,7 @@ class StatementCollection
 	const HAVING = 'having';
 	const ORDERBY = 'orderby';
 	const LIMIT = 'limit';
+	const OFFSET = 'offset';
 
 	protected $initial;
 
@@ -25,6 +26,8 @@ class StatementCollection
 	protected $orderbys = [];
 
 	protected $limit;
+
+	protected $offset;
 
 	public function hasInitial()
 	{
@@ -77,6 +80,12 @@ class StatementCollection
 
 				break;
 
+			case self::OFFSET:
+
+				$this->offset = $query;
+
+				break;
+
 			default:
 
 				break;
@@ -91,8 +100,9 @@ class StatementCollection
 		$groupbys = empty($this->groupbys) ? '' : implode(' ', $this->groupbys);
 		$havings =  empty($this->havings) ? '' : implode(' ', $this->havings);
 		$orderbys = empty($this->orderbys) ? '' : implode(' ', $this->orderbys);
-		$limit =    $this->limit ?: '';
+		$limit = $this->limit ?: '';
+		$offset = $this->offset ?: '';
 
-		return "$initial $joins $wheres $groupbys $havings $orderbys $limit";
+		return "$initial $joins $wheres $groupbys $havings $orderbys $limit $offset";
 	}
 }

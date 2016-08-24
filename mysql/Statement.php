@@ -362,6 +362,30 @@ trait Statement
 	}
 
 	/**
+	 * Offset the results
+	 *
+	 * @param int $offset
+	 * @return this
+	 */
+	public function offset($offset = 10)
+	{
+		$this->statements->add(StatementCollection::OFFSET, "OFFSET $offset");
+
+		return $this;
+	}
+
+	/**
+	 * Alias for offset
+	 *
+	 * @param int $offset
+	 * @return this
+	 */
+	public function skip($offset = 10)
+	{
+		return $this->offset($offset);
+	}
+
+	/**
 	 * Join clause
 	 *
 	 * @param string $table
