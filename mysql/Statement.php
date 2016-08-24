@@ -121,19 +121,40 @@ trait Statement
 			$columns = array_keys($columns);
 		}
 
-		$columns = implode(',', $columns);
-		$values = '\'' . implode('\',\'', $values) . '\'';
-
 		if ($this->hasTimestamps())
 		{
-			$timestamp = "'" . date('Y-m-d H:i:s') . "'";
-			$this->statement = "INSERT INTO $table ($columns, created_at, updated_at) VALUES ($values, $timestamp, $timestamp)";	
+			if (array_search('created_at', $columns))
+			{
+				$key = array_search('created_at', $columns);
+				$created_at =  "'" . $values[$key] . "'";
+				unset($columns[$key]);
+				unset($values[$key]);
+			}
+			else
+				$created_at =  "'" . date('Y-m-d H:i:s') . "'";
+
+			if (array_search('created_at', $columns))
+			{
+				$key = array_search('created_at', $columns);
+				$created_at =  "'" . $values[$key] . "'";
+				unset($columns[$key]);
+				unset($values[$key]);
+			}
+			else
+				$updated_at =  "'" . date('Y-m-d H:i:s') . "'";
+
+			$columns = implode(',', $columns);
+			$values = '\'' . implode('\',\'', $values) . '\'';
+			
+			$this->statement = "INSERT INTO $table ($columns, created_at, updated_at) VALUES ($values, $created_at, $updated_at)";
 		}
 		else
 		{
+			$columns = implode(',', $columns);
+			$values = '\'' . implode('\',\'', $values) . '\'';
+
 			$this->statement = "INSERT INTO $table ($columns) VALUES ($values)";
 		}
-		
 
 		$this->get();
 
@@ -551,7 +572,7 @@ trait Statement
 		
 		if (!$this->statement)
 			$this->statement = $this->statements->build();
-
+		
 		$this->query($this->statement);
 
 		return $this->results;

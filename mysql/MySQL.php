@@ -85,7 +85,7 @@ class MySQL
 	{
 		$this->query = $query;
 		$this->results = new Collection;
-
+		
 		try {
 			$results = mysqli_query($this->connection->getConnection(), $query);
 		}
@@ -110,7 +110,7 @@ class MySQL
 				$result = new $model($row);
 			}
 			else
-				$result = new MySQLResult($row);
+				$result = new MySQLResult($row, $this->table);
 
 			$this->results->add($result);
 		}
