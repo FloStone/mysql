@@ -18,7 +18,7 @@ class Model
 	{
 		foreach($data as $col => $value)
 		{
-			$this->$col = $value;
+			$this->attributes[$col] = $value;
 		}
 
 		$this->table = $table;
