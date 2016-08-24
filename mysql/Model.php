@@ -4,8 +4,18 @@ namespace Flo\MySQL;
 
 class Model
 {
+	/**
+	 * Attributes of table
+	 *
+	 * @var array
+	 */
 	protected $attributes = [];
 
+	/**
+	 * Table used by model
+	 *
+	 * @var string
+	 */
 	protected $table = NULL;
 
 	/**
@@ -60,5 +70,10 @@ class Model
 	public function __get($key)
 	{
 		return $this->attributes[$key];
+	}
+
+	public function toJson()
+	{
+		return json_encode($this->attributes);
 	}
 }
