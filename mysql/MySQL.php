@@ -107,7 +107,7 @@ class MySQL
 			if ($this->model)
 			{
 				$model = $this->model;
-				$result = new $model($row);
+				$result = new $model($row, $this->table);
 			}
 			else
 				$result = new MySQLResult($row, $this->table);

@@ -182,6 +182,7 @@ trait Statement
 
 		foreach($merged as $column => $value)
 		{
+			$value = is_string($value) ? addslashes($value) : $value;
 			$setarray[] = "$column='$value'";
 		}
 
@@ -199,7 +200,7 @@ trait Statement
 
 		$this->get();
 
-		return mysqli_insert_id($this->connection);
+		return $id;
 	}
 
 	/**
@@ -651,6 +652,20 @@ trait Statement
 		$table = $this->table;
 
 		return $this->query("SELECT $select FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '$db' AND TABLE_NAME = '$table' AND COLUMN_NAME = '$column'")->first();
+	}
+
+	/**
+	 * Get columns of current table
+	 *
+	 * @return Result
+	 */
+	public function getColumns()
+	{
+		$table = $this->table;
+		$columns = $this->query("SHOW COLUMNS FROM $table");
+
+		if ($columns)
+			return $columns;
 	}
 
 	/**

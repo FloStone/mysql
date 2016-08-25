@@ -9,7 +9,7 @@ class Model
 	 *
 	 * @var array
 	 */
-	protected $attributes = [];
+	protected $columns = [];
 
 	/**
 	 * Table used by model
@@ -17,6 +17,13 @@ class Model
 	 * @var string
 	 */
 	protected $table = NULL;
+
+	/**
+	 * Fields that cannot be filled by default
+	 *
+	 * @var array
+	 */
+	protected $guarded = ['id', 'created_at', 'updated_at'];
 
 	/**
 	 * Initialization
@@ -28,7 +35,7 @@ class Model
 	{
 		foreach($data as $col => $value)
 		{
-			$this->attributes[$col] = $value;
+			$this->$col = $value;
 		}
 
 		$this->table = $table;
@@ -52,7 +59,7 @@ class Model
 	 */
 	public function save()
 	{
-		\SQL::table($this->table)->update($this->attributes['id'], $this->attributes);
+		\SQL::table($this->table)->update($this->id, $this->getDBValues());
 
 		return true;
 	}
@@ -67,33 +74,10 @@ class Model
 	{
 		foreach ($data as $key => $value)
 		{
-			$this->attributes[$key] = $value;
+			$this->$key = $value;
 		}
 
 		return $this->save();
-	}
-
-	/**
-	 * Set a value in model
-	 *
-	 * @param string $key
-	 * @param array $value
-	 * @return void
-	 */
-	public function __set($key, $value)
-	{
-		$this->attributes[$key] = is_string($value) ? addslashes($value) : $value;
-	}
-
-	/**
-	 * Get a value from model
-	 *
-	 * @param string $key
-	 * @return string
-	 */
-	public function __get($key)
-	{
-		return $this->attributes[$key];
 	}
 
 	/**
@@ -103,6 +87,27 @@ class Model
 	 */
 	public function toJson()
 	{
-		return json_encode($this->attributes);
+		return json_encode($this);
+	}
+
+	/**
+	 * Get values to be inserted or updated to database
+	 *
+	 * @return array
+	 */
+	public function getDBValues()
+	{
+		$dbcols = \SQL::table($this->table)->getColumns();
+		$columns = [];
+
+		foreach ($dbcols as $col)
+		{
+			$field = $col->Field;
+
+			if ($this->$field && array_search($field, $this->guarded) === false)
+				$columns[$field] = $this->$field;
+		}
+		
+		return $columns;
 	}
 }
