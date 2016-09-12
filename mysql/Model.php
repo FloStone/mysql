@@ -12,6 +12,13 @@ class Model
 	protected $columns = [];
 
 	/**
+	 * Model data
+	 *
+	 * @var array
+	 */
+	protected $data = [];
+
+	/**
 	 * Table used by model
 	 *
 	 * @var string
@@ -35,7 +42,7 @@ class Model
 	{
 		foreach($data as $col => $value)
 		{
-			$this->$col = $value;
+			$this->data[$col] = $value;
 		}
 
 		$this->table = $table;
@@ -109,5 +116,38 @@ class Model
 		}
 		
 		return $columns;
+	}
+
+	/**
+	 * Convert model to array
+	 *
+	 * @return array
+	 */
+	public function toArray()
+	{
+		return $this->data;
+	}
+
+	/**
+	 * Set a value to model
+	 *
+	 * @param string|int $key
+	 * @param string|int|object|array $value
+	 * @return void
+	 */
+	public function __set($key, $value)
+	{
+		$this->data[$key] = $value;
+	}
+
+	/**
+	 * Get a model value
+	 *
+	 * @param string|int $key
+	 * @return string|int
+	 */
+	public function __get($key)
+	{
+		return isset($this->data[$key]) ? $this->data[$key] : NULL;
 	}
 }
