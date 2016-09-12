@@ -275,13 +275,15 @@ trait Statement
 
 		foreach ($blueprint->getColumns() as $col)
 		{
-			$adds[] = "ADD COLUMN $col ";
+			$adds[] = "ADD COLUMN $col AFTER updated_at ";
 		}
 
 		$adds = implode(', ', $adds);
 
-		$this->statement = "ALTER TABLE $table $adds";
+		$drops = implode(', ', $blueprint->getDrops());
 
+		$this->statement = "ALTER TABLE $table $adds $drops";
+		
 		return $this->get();
 	}
 
@@ -626,6 +628,13 @@ trait Statement
 			return false;
 		else
 			return true;
+	}
+
+	public function tableExists($table)
+	{
+		$result = $this->query("SHOW TABLES LIKE '$table'");
+
+		return !$result->isEmpty();
 	}
 
 	/**

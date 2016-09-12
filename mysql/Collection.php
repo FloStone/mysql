@@ -75,6 +75,18 @@ class Collection implements IteratorAggregate
 	}
 
 	/**
+	 * Remove and item from the collection
+	 *
+	 * @param string $key
+	 * @return void
+	 */
+	public function remove($key)
+	{
+		if (isset($this->data[$key]))
+			unset($this->data[$key]);
+	}
+
+	/**
 	 * Return the json form
 	 *
 	 * @return json

@@ -11,6 +11,8 @@ class Blueprint
 	 */
 	protected $columns;
 
+	protected $drops = [];
+
 	/**
 	 * Constructor
 	 *
@@ -109,5 +111,15 @@ class Blueprint
 	public function getColumns()
 	{
 		return $this->columns;
+	}
+
+	public function dropColumn($col)
+	{
+		$this->drops[] = "DROP COLUMN $col ";
+	}
+
+	public function getDrops()
+	{
+		return $this->drops;
 	}
 }
