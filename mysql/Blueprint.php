@@ -11,6 +11,11 @@ class Blueprint
 	 */
 	protected $columns;
 
+	/**
+	 * Drop statements
+	 *
+	 * @var array
+	 */
 	protected $drops = [];
 
 	/**

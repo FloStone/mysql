@@ -95,4 +95,33 @@ class Collection implements IteratorAggregate
 	{
 		return json_encode($this->data);
 	}
+
+	/**
+	 * List a key and value of collection items
+	 *
+	 * @param string $key
+	 * @param string $value
+	 * @return array
+	 */
+	public function lists($key, $value = NULL)
+	{
+		$lists = [];
+
+		if ($value)
+		{
+			foreach ($this->data as $item)
+			{
+				$lists[$item->$key] = $item->$value;
+			}
+		}
+		else
+		{
+			foreach ($this->data as $item)
+			{
+				$lists[] = $item->$key;
+			}
+		}
+
+		return $lists;
+	}
 }
