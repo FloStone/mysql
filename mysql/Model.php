@@ -2,7 +2,9 @@
 
 namespace Flo\MySQL;
 
-class Model
+use JsonSerializable;
+
+class Model implements JsonSerializable
 {
 	/**
 	 * Attributes of table
@@ -94,8 +96,20 @@ class Model
 	 */
 	public function toJson()
 	{
+        // $result = [];
+        // foreach($this->data as $name => $value) {
+        //     if($value instanceof Collection) {
+        //         $result[$name] = $value->toJson();
+        //     } else {
+        //         $result[$name] = json_encode($value);
+        //     }
+        // }
 		return json_encode($this);
 	}
+
+    public function jsonSerialize() {
+        return $this->data;
+    }
 
 	/**
 	 * Get values to be inserted or updated to database
