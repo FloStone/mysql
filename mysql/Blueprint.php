@@ -103,6 +103,12 @@ class Blueprint
 		$this->columns[] = "updated_at TIMESTAMP DEFAULT '0000-00-00 00:00:00'";
 	}
 
+	public function date($name, $default = NULL)
+	{
+		$default = is_null($default) ? "" : "DEFAULT '$default'";
+		$this->columns[] = "$name DATE $default";
+	}
+
 	/**
 	 * String representation
 	 *
