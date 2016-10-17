@@ -85,7 +85,7 @@ class MySQL
 	{
 		$this->query = $query;
 		$this->results = new Collection;
-		
+
 		try {
 			$results = mysqli_query($this->connection->getConnection(), $query);
 		}
@@ -146,5 +146,15 @@ class MySQL
 	public function __tostring()
 	{
 		return $this->query;
+	}
+
+	/**
+	 * Close MySQL connection
+	 *
+	 * @return bool
+	 */
+	public function close()
+	{
+		return $this->connection->getConnection()->close();
 	}
 }
