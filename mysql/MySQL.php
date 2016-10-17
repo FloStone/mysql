@@ -45,7 +45,7 @@ class MySQL
 	 * @param string $database
 	 * @return void
 	 */
-	public function __construct($host, $username = NULL, $password = NULL, $database = NULL)
+	public function __construct($host, $username = NULL, $password = NULL, $database = NULL, $newconnection = true)
 	{
 		$this->traitConstructor();
 
@@ -54,7 +54,7 @@ class MySQL
 		else
 			$credentials = ['host' => $host, 'username' => $username, 'password' => $password, 'database' => $database];
 
-		$this->connection = Connection::getInstance() ?: new Connection($credentials);
+		$this->connection =  $newconnection ? new Connection($credentials) : Connection::getInstance() ?: new Connection($credentials);
 
 		$this->results = new Collection;
 
