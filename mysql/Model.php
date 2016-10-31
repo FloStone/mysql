@@ -164,4 +164,9 @@ class Model implements JsonSerializable
 	{
 		return isset($this->data[$key]) ? $this->data[$key] : NULL;
 	}
+
+	public function __callStatic($func, $args)
+	{
+		return call_user_func_array([SQL::table($this->table), $func], $args);
+	}
 }
