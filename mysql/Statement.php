@@ -117,7 +117,7 @@ trait Statement
 			$values = array_map(function($value){
 				return addslashes($value);
 			}, array_values($columns));
-			
+
 			$columns = array_keys($columns);
 		}
 
@@ -145,7 +145,7 @@ trait Statement
 
 			$columns = implode(',', $columns);
 			$values = '\'' . implode('\',\'', $values) . '\'';
-			
+
 			$this->statement = "INSERT INTO $table ($columns, created_at, updated_at) VALUES ($values, $created_at, $updated_at)";
 		}
 		else
@@ -195,7 +195,7 @@ trait Statement
 		}
 		else
 		{
-			$this->statement = "UPDATE $table SET $setstring WHERE id = $id";	
+			$this->statement = "UPDATE $table SET $setstring WHERE id = $id";
 		}
 
 		$this->get();
@@ -216,7 +216,7 @@ trait Statement
 			foreach($table as $t)
 			{
 				$this->statement = "DROP TABLE IF EXISTS $t";
-				$this->get();		
+				$this->get();
 			}
 		}
 		else
@@ -257,7 +257,7 @@ trait Statement
 
 		echo "Created $table table\n";
 
-		return $this->get();	
+		return $this->get();
 	}
 
 	/**
@@ -283,7 +283,7 @@ trait Statement
 		$drops = implode(', ', $blueprint->getDrops());
 
 		$this->statement = "ALTER TABLE $table $adds $drops";
-		
+
 		return $this->get();
 	}
 
@@ -572,10 +572,10 @@ trait Statement
 	{
 		if (!$this->statements->hasInitial())
 			$this->select();
-		
+
 		if (!$this->statement)
 			$this->statement = $this->statements->build();
-		
+
 		$this->query($this->statement);
 
 		return $this->results;
@@ -623,7 +623,7 @@ trait Statement
 	{
 		$db = DB_DATABASE;
 		$table = $this->table;
-		
+
 		if (is_null($this->getSchema($column)))
 			return false;
 		else
