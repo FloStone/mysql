@@ -246,6 +246,13 @@ trait Statement
 		return $this->get();
 	}
 
+	/**
+	 * Create statement with pre-defined id and timestamps
+	 *
+	 * @param string $table
+	 * @param Colsure $closure
+	 * @return int
+	 */
 	public function createBasic($table, Closure $closure)
 	{
 		$blueprint = new Blueprint;

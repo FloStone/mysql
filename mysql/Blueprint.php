@@ -32,15 +32,14 @@ class Blueprint
 	 * Integer field
 	 *
 	 * @param string $name
-	 * @param bool $null
-	 * @param bool $unsigned
-	 * @return void
+	 * @return Column
 	 */
-	public function integer($name, $null = false, $unsigned = false)
+	public function integer($name)
 	{
-		$null = $null ? "" : " NOT NULL";
-		$unsigned = $unsigned ? " UNSIGNED" : "";
-		$this->columns[] = "$name INT$unsigned$null";
+		$col = new Column($name, Column::INTEGER);
+		$this->columns[] = $col;
+
+		return $col;
 	}
 
 	/**
@@ -51,7 +50,8 @@ class Blueprint
 	 */
 	public function increments($name = 'id')
 	{
-		$this->columns[] = "$name INT UNSIGNED NOT NULL AUTO_INCREMENT KEY";
+		$col = (new Column($name, Column::INTEGER))->unsigned()->increments()->primary();
+		$this->columns[] = $col;
 	}
 
 	/**
@@ -62,34 +62,41 @@ class Blueprint
 	 * @param int $length
 	 * @return void
 	 */
-	public function string($name, $null = false, $length = 255)
+	public function string($name, $length = 255)
 	{
-		$null = $null ? "" : " NOT NULL";
-		$this->columns[] = "$name VARCHAR($length)$null";
+		$col = new Column($name, "VARCHAR($length)");
+		$this->columns[] = $col;
+
+		return $col;
 	}
 
 	/**
 	 * Text field
 	 *
 	 * @param string $name
-	 * @param bool $null
-	 * @return void
+	 * @return Column
 	 */
-	public function text($name, $null = false)
+	public function text($name)
 	{
-		$null = $null ? "" : " NOT NULL";
-		$this->columns[] = "$name TEXT$null";
+		$col = new Column($name, Column::TEXT);
+		$this->columns[] = $col;
+
+		return $col;
 	}
 
 	/**
 	 * Custom field definition
 	 *
-	 * @param string $column
-	 * @return void
+	 * @param string $name
+	 * @param string $type
+	 * @return Column
 	 */
-	public function custom($column)
+	public function custom($name, $type)
 	{
-		$this->columns[] = $column;
+		$col = new Column($name, $type);
+		$this->columns[] = $col;
+
+		return $col;
 	}
 
 	/**
@@ -99,14 +106,23 @@ class Blueprint
 	 */
 	public function timestamps()
 	{
-		$this->columns[] = "created_at TIMESTAMP DEFAULT '0000-00-00 00:00:00'";
-		$this->columns[] = "updated_at TIMESTAMP DEFAULT '0000-00-00 00:00:00'";
+		$this->columns[] = (new Column('created_at', Column::TIMESTAMP))->default('0000-00-00 00:00:00');
+		$this->columns[] = (new Column('updated_at', Column::TIMESTAMP))->default('0000-00-00 00:00:00');
 	}
 
-	public function date($name, $default = NULL)
+	/**
+	 * Date field
+	 *
+	 * @param string $name
+	 *
+	 * @return Column
+	 */
+	public function date($name)
 	{
-		$default = is_null($default) ? "" : "DEFAULT '$default'";
-		$this->columns[] = "$name DATE $default";
+		$col = new Column($name, Column::DATE);
+		$this->columns[] = $col;
+
+		return $col;
 	}
 
 	/**
@@ -114,21 +130,38 @@ class Blueprint
 	 *
 	 * @return string
 	 */
-	public function __tostring()
+	public function __toString()
 	{
 		return implode(',', $this->columns);
 	}
 
+	/**
+	 * Get the columns of a table
+	 *
+	 * @return array
+	 * @return void
+	 */
 	public function getColumns()
 	{
 		return $this->columns;
 	}
 
+	/**
+	 * Drop a column
+	 *
+	 * @param string $col
+	 * @return void
+	 */
 	public function dropColumn($col)
 	{
 		$this->drops[] = "DROP COLUMN $col ";
 	}
 
+	/**
+	 * Get all drop statements
+	 *
+	 * @return array
+	 */
 	public function getDrops()
 	{
 		return $this->drops;
