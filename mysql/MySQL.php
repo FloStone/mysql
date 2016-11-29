@@ -8,6 +8,11 @@ class MySQL
 {
 	use Statement;
 
+	const MATCH_BOOLEAN_MODE = "IN BOOLEAN MODE";
+	const MATCH_QUERY_EXPANSION = "WITH QUERY EXPANSION";
+	const ENGINE_INNODB = "INNODB";
+	const ENGINE_MYISAM = "MyISAM";
+
 	/**
 	 * Connection to database
 	 *

@@ -225,6 +225,8 @@ trait Statement
 			$this->get();
 		}
 
+		echo "Dropped table $table";
+
 		return $this->results;
 	}
 
@@ -235,11 +237,11 @@ trait Statement
 	 * @param Closure $closure
 	 * @return bool
 	 */
-	public function create($table, Closure $closure)
+	public function create($table, Closure $closure, $engine = self::INNODB)
 	{
 		$closure($blueprint = new Blueprint);
 
-		$this->statement = "CREATE TABLE IF NOT EXISTS $table ($blueprint)";
+		$this->statement = "CREATE TABLE IF NOT EXISTS $table ($blueprint) ENGINE = $engine";
 
 		echo "Created $table table\n";
 
@@ -253,14 +255,14 @@ trait Statement
 	 * @param Colsure $closure
 	 * @return int
 	 */
-	public function createBasic($table, Closure $closure)
+	public function createBasic($table, Closure $closure, $engine = self::INNODB)
 	{
 		$blueprint = new Blueprint;
 		$blueprint->increments();
 		$closure($blueprint);
 		$blueprint->timestamps();
 
-		$this->statement = "CREATE TABLE IF NOT EXISTS $table ($blueprint);";
+		$this->statement = "CREATE TABLE IF NOT EXISTS $table ($blueprint) ENGINE = $engine;";
 
 		echo "Created $table table\n";
 
@@ -341,6 +343,13 @@ trait Statement
 		endif;
 
 		return $this;
+	}
+
+	public function match(array $match = [], $against = [], $mode = self::MATCH_BOOLEAN_MODE)
+	{
+		$matches = implode(",", $match);
+		$against = is_array($against) ? implode(" ", $against) : $against;
+		return $this->whereRaw("MATCH ($matches) AGAINST ('$against' $mode)");
 	}
 
 	public function whereRaw($raw)
