@@ -598,7 +598,7 @@ trait Statement
 
 		if (!$this->statement)
 			$this->statement = $this->statements->build();
-		print $this->statement;
+
 		$this->query($this->statement);
 		$this->reset();
 		return $this->results;
