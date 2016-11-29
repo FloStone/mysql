@@ -260,9 +260,18 @@ trait Statement
 		$closure($blueprint);
 		$blueprint->timestamps();
 
-		$this->statement = "CREATE TABLE IF NOT EXISTS $table ($blueprint)";
+		$this->statement = "CREATE TABLE IF NOT EXISTS $table ($blueprint);";
 
 		echo "Created $table table\n";
+
+		return $this->get();
+	}
+
+	public function index($name, callable $settings)
+	{
+		$index = new Index($name);
+		$settings($index);
+		$this->statement = $index;
 
 		return $this->get();
 	}
@@ -435,6 +444,13 @@ trait Statement
 		return $this;
 	}
 
+	public function joinUsing($table, $identifier)
+	{
+		$this->statements->add(StatementCollection::JOIN, "INNER JOIN $table USING $identifier");
+
+		return $this;
+	}
+
 	/**
 	 * Left join clause
 	 *
@@ -582,9 +598,9 @@ trait Statement
 
 		if (!$this->statement)
 			$this->statement = $this->statements->build();
-
+		print $this->statement;
 		$this->query($this->statement);
-
+		$this->reset();
 		return $this->results;
 	}
 
@@ -618,6 +634,9 @@ trait Statement
 	 */
 	public function toSql()
 	{
+		if (!$this->statements->hasInitial())
+			$this->select();
+
 		return $this->statements->build();
 	}
 
@@ -678,8 +697,8 @@ trait Statement
 	public function getColumns()
 	{
 		$table = $this->table;
-		$columns = $this->query("SHOW COLUMNS FROM $table");
 
+		$columns = $this->query("SHOW COLUMNS FROM $table");
 		if ($columns)
 			return $columns;
 	}
@@ -730,5 +749,12 @@ trait Statement
 		$this->statements = $sccopy;
 
 		return $this;
+	}
+
+	public function reset()
+	{
+		$this->statement = NULL;
+		$this->hasWhere = false;
+		$this->statements = new StatementCollection;
 	}
 }

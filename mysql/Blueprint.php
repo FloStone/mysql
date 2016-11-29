@@ -19,6 +19,13 @@ class Blueprint
 	protected $drops = [];
 
 	/**
+	 * Indices
+	 *
+	 * @var array
+	 */
+	protected $indices = [];
+
+	/**
 	 * Constructor
 	 *
 	 * @return void
@@ -126,6 +133,17 @@ class Blueprint
 	}
 
 	/**
+	 * Create an index
+	 *
+	 * @param string $name
+	 * @return Index
+	 */
+	public function index($name)
+	{
+		
+	}
+
+	/**
 	 * String representation
 	 *
 	 * @return string
@@ -165,5 +183,15 @@ class Blueprint
 	public function getDrops()
 	{
 		return $this->drops;
+	}
+
+	public function indices()
+	{
+		return $this->indices();
+	}
+
+	public function renderIndices()
+	{
+		return implode('; ', $this->indices);
 	}
 }

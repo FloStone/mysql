@@ -68,7 +68,10 @@ class Model implements JsonSerializable
 	 */
 	public function save()
 	{
-		\SQL::table($this->table)->update($this->id, $this->getDBValues());
+		if ($this->id)
+			\SQL::table($this->table)->update($this->id, $this->getDBValues());
+		else
+			\SQL::table($this->table)->insert($this->getDBValues());
 
 		return true;
 	}
@@ -128,7 +131,6 @@ class Model implements JsonSerializable
 			if ($this->$field && array_search($field, $this->guarded) === false)
 				$columns[$field] = $this->$field;
 		}
-		
 		return $columns;
 	}
 

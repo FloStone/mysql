@@ -54,7 +54,7 @@ class MySQL
 		else
 			$credentials = ['host' => $host, 'username' => $username, 'password' => $password, 'database' => $database];
 
-		$this->connection =  $newconnection ? new Connection($credentials) : Connection::getInstance() ?: new Connection($credentials);
+		$this->connection = $newconnection ? new Connection($credentials) : Connection::getInstance() ?: new Connection($credentials);
 
 		$this->results = new Collection;
 
