@@ -216,16 +216,16 @@ trait Statement
 			foreach($table as $t)
 			{
 				$this->statement = "DROP TABLE IF EXISTS $t";
-				$this->get();
+				if($this->get())
+					echo "Dropped table $table\n";
 			}
 		}
 		else
 		{
 			$this->statement = "DROP TABLE IF EXISTS $table";
-			$this->get();
+			if($this->get())
+				echo "Dropped table $table\n";
 		}
-
-		echo "Dropped table $table";
 
 		return $this->results;
 	}
@@ -237,7 +237,7 @@ trait Statement
 	 * @param Closure $closure
 	 * @return bool
 	 */
-	public function create($table, Closure $closure, $engine = self::INNODB)
+	public function create($table, Closure $closure, $engine = MySQL::ENGINE_INNODB)
 	{
 		$closure($blueprint = new Blueprint);
 
@@ -255,7 +255,7 @@ trait Statement
 	 * @param Colsure $closure
 	 * @return int
 	 */
-	public function createBasic($table, Closure $closure, $engine = self::INNODB)
+	public function createBasic($table, Closure $closure, $engine = MySQL::ENGINE_INNODB)
 	{
 		$blueprint = new Blueprint;
 		$blueprint->increments();
