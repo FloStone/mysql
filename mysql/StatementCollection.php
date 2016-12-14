@@ -103,6 +103,6 @@ class StatementCollection
 		$limit = $this->limit ?: '';
 		$offset = $this->offset ?: '';
 
-		return "$initial $joins $wheres $groupbys $havings $orderbys $limit $offset";
+		return trim("$initial $joins $wheres $groupbys $havings $orderbys $limit $offset");
 	}
 }
