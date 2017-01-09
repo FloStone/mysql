@@ -96,7 +96,7 @@ class MySQL
 		}
 		catch (mysqli_sql_exception $e)
 		{
-			throw $e;
+			throw new MySQLException($e);
 		}
 
 		$this->resource = $results;
