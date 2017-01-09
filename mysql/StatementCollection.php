@@ -70,7 +70,7 @@ class StatementCollection
 
 			case self::ORDERBY:
 
-				$this->orderbys[] = $query;
+				$this->orderbys = [$query];
 
 				break;
 
