@@ -269,6 +269,18 @@ trait Statement
 		return $this->get();
 	}
 
+	public function createView($name, $query)
+	{
+		if ($query instanceof MySQL)
+			$query = $query->toSql();
+
+		$this->statement = "CREATE OR REPLACE VIEW $name AS $query";
+
+		echo "Created $name view\n";
+
+		return $this->get();
+	}
+
 	public function index($name, callable $settings)
 	{
 		$index = new Index($name);
