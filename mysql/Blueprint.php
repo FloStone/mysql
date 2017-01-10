@@ -185,11 +185,19 @@ class Blueprint
 		return $this->drops;
 	}
 
+	/**
+	 * Get the indices of the table
+	 * @return array
+	 */
 	public function indices()
 	{
 		return $this->indices();
 	}
 
+	/**
+	 * Render the indices
+	 * @return String
+	 */
 	public function renderIndices()
 	{
 		return implode('; ', $this->indices);
