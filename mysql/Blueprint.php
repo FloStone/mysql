@@ -134,7 +134,7 @@ class Blueprint
 
 	public function decimal($name, $limit = 2)
 	{
-		$col = new DeciimalColumn($name);
+		$col = new DecimalColumn($name);
 		$this->columns[] = $col;
 
 		return $col;
