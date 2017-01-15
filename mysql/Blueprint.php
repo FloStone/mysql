@@ -132,6 +132,14 @@ class Blueprint
 		return $col;
 	}
 
+	public function decimal($name, $limit = 2)
+	{
+		$col = new DeciimalColumn($name);
+		$this->columns[] = $col;
+
+		return $col;
+	}
+
 	/**
 	 * Create an index
 	 *
