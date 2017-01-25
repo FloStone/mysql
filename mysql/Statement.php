@@ -380,7 +380,7 @@ trait Statement
 	 * @param int|string $value
 	 * @return this
 	 */
-	public function orWhere($col, $oprator, $value = NULL)
+	public function orWhere($col, $operator, $value = NULL)
 	{
 		if (is_null($value))
 			$this->statements->add(StatementCollection::WHERE, "OR $col = $operator");

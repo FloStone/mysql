@@ -58,7 +58,7 @@ class StatementCollection
 
 			case self::GROUPBY:
 
-				$this->groupbys[] = $query;
+				$this->groupbys = [$query];
 
 				break;
 

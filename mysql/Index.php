@@ -57,6 +57,19 @@ class Index
 		$table = $this->table;
 		$type = $this->type;
 
+        // Maybe replace with this?
+        // select if (
+        //     exists(
+        //         select distinct index_name from information_schema.statistics
+        //         where table_schema = 'schema_db_name'
+        //         and table_name = 'tab_name' and index_name like 'index_1'
+        //     )
+        //     ,'select ''index index_1 exists'' _______;'
+        //     ,'create index index_1 on tab_name(column_name_names)') into @a;
+        // PREPARE stmt1 FROM @a;
+        // EXECUTE stmt1;
+        // DEALLOCATE PREPARE stmt1;
+
 		return "CREATE $type INDEX $name ON $table ($cols)";
 	}
 }
