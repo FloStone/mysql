@@ -63,6 +63,16 @@ class Collection implements IteratorAggregate
 		return empty($this->data);
 	}
 
+    /**
+     * Check if the collection is empty
+     *
+     * @return bool
+     */
+    public function count()
+    {
+        return sizeof($this->data);
+    }
+
 	/**
 	 * Add an item from collection
 	 *

@@ -761,6 +761,9 @@ trait Statement
         $this->statements->add(StatementCollection::INITIAL, "SELECT COUNT(*) as count FROM $table");
         $this->get();
 
+        if($this->results->count() > 1)
+            return $this->results->count();
+
         return (int) $this->results->first()->count;
 	}
 
