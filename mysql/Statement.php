@@ -764,6 +764,9 @@ trait Statement
         if($this->results->count() > 1)
             return $this->results->count();
 
+        if(!$this->results->first())
+            return 0;
+
         return (int) $this->results->first()->count;
 	}
 
