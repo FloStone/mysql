@@ -30,7 +30,7 @@ class Collection implements IteratorAggregate
 	 */
 	public function first()
 	{
-		return array_shift($this->data);
+		return isset($this->data[0])?$this->data[0]:null;
 	}
 
 	/**
