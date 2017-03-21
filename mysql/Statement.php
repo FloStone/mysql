@@ -759,6 +759,7 @@ trait Statement
 	{
 		$table = $this->table;
         $this->statements->add(StatementCollection::INITIAL, "SELECT COUNT(*) as count FROM $table");
+        $this->orderBy("1", "asc");
         $this->get();
 
         if($this->results->count() > 1)
