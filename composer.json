@@ -1,7 +1,7 @@
 {
     "name": "flostone/mysql",
     "description": "MySQL Library for plain php and other applications",
-    "version": "1.2.7",
+    "version": "1.3.0",
     "authors": [
         {
             "name": "Flo Stone"
@@ -9,7 +9,7 @@
     ],
     "autoload": {
     	"psr-4": {
-            "Flo\\MySQL\\": "mysql/"
+            "FloStone\\MySQL\\": "mysql/"
         }
     }
 }

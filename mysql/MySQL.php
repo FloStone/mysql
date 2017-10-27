@@ -1,6 +1,6 @@
 <?php
 
-namespace Flo\MySQL;
+namespace FloStone\MySQL;
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 

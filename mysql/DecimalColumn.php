@@ -1,6 +1,6 @@
 <?php
 
-namespace Flo\MySQL;
+namespace FloStone\MySQL;
 
 class DecimalColumn extends Column
 {
