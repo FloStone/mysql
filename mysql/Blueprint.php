@@ -113,8 +113,8 @@ class Blueprint
 	 */
 	public function timestamps()
 	{
-		$this->columns[] = (new Column('created_at', Column::TIMESTAMP))->default('0000-00-00 00:00:00');
-		$this->columns[] = (new Column('updated_at', Column::TIMESTAMP))->default('0000-00-00 00:00:00');
+		$this->columns[] = (new Column('created_at', Column::TIMESTAMP));
+		$this->columns[] = (new Column('updated_at', Column::TIMESTAMP));
 	}
 
 	/**

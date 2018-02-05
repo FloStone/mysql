@@ -79,9 +79,12 @@ class Collection implements IteratorAggregate
 	 * @param string|object|int|bool $item
 	 * @return void
 	 */
-	public function add($item)
+	public function add($key, $item = null)
 	{
-		$this->data[] = $item;
+		if (is_null($item))
+			$this->data[] = $item;
+		else
+			$this->data[$key] = $item;
 	}
 
 	/**
@@ -97,11 +100,20 @@ class Collection implements IteratorAggregate
 	}
 
 	/**
+	 * Add an array of items to the collection
+	 * @param array $items
+	 */
+	public function addArray(array $items)
+	{
+		$this->data = array_merge($this->data, $items);
+	}
+
+	/**
 	 * Return the json form
 	 *
 	 * @return json
 	 */
-	public function toJson()
+	public function toJson() : string
 	{
 		return json_encode($this->data);
 	}
@@ -133,5 +145,18 @@ class Collection implements IteratorAggregate
 		}
 
 		return $lists;
+	}
+
+	/**
+	 * Get an item by key
+	 * @param  string $key
+	 * @return item
+	 */
+	public function get($key)
+	{
+		if (isset($this->data[$key]))
+			return $this->data[$key];
+		else
+			return null;
 	}
 }
