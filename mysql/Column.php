@@ -60,6 +60,12 @@ class Column
 	protected $default = NULL;
 
 	/**
+	 * Default is not encapsed in string markers
+	 * @var boolean
+	 */
+	protected $rawDefault = false;
+
+	/**
 	 * Constructor
 	 *
 	 * @param string $name
@@ -135,9 +141,17 @@ class Column
 	 * @param string|int $default
 	 * @return this
 	 */
-	public function def($default)
+	public function default($default)
 	{
 		$this->default = $default;
+
+		return $this;
+	}
+
+	public function rawDefault($default)
+	{
+		$this->default = $default;
+		$this->rawDefault = true;
 
 		return $this;
 	}
@@ -169,8 +183,8 @@ class Column
 		$unsigned = $this->unsigned ? "UNSIGNED" : "";
 		$ai = $this->ai ? "AUTO_INCREMENT" : "";
 		$primary = $this->primary ? "KEY" : "";
-		$default = $this->default ? "DEFAULT '{$this->default}'" : "";
+		$default = !is_null($this->default) ? $this->rawDefault ? "DEFAULT {$this->default}" : "DEFAULT '{$this->default}'" : "";
 
-		return "$name $type $unsigned $null $ai $primary";
+		return "$name $type $unsigned $null $ai $primary $default";
 	}
 }
