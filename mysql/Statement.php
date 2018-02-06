@@ -62,7 +62,7 @@ trait Statement
 	 * @param string $table
 	 * @return self
 	 */
-	public function table($table)
+	public function table(string $table)
 	{
 		$this->table = $table;
 
@@ -237,7 +237,7 @@ trait Statement
 	 * @param Closure $closure
 	 * @return bool
 	 */
-	public function create($table, Closure $closure, $engine = MySQL::ENGINE_INNODB)
+	public function create(string $table, Closure $closure, $engine = MySQL::ENGINE_INNODB)
 	{
 		$closure($blueprint = new Blueprint);
 
@@ -255,7 +255,7 @@ trait Statement
 	 * @param Colsure $closure
 	 * @return int
 	 */
-	public function createBasic($table, Closure $closure, $engine = MySQL::ENGINE_INNODB)
+	public function createBasic(string $table, Closure $closure, $engine = MySQL::ENGINE_INNODB)
 	{
 		$blueprint = new Blueprint;
 		$blueprint->increments();
@@ -281,7 +281,7 @@ trait Statement
 		return $this->get();
 	}
 
-	public function index($name, callable $settings)
+	public function index(string $name, callable $settings)
 	{
 		$index = new Index($name);
 		$settings($index);
@@ -297,7 +297,7 @@ trait Statement
 	 * @param Closure $closure
 	 * @return bool
 	 */
-	public function alter($table, Closure $closure)
+	public function alter(string $table, Closure $closure)
 	{
 		$closure($blueprint = new Blueprint);
 
@@ -337,7 +337,7 @@ trait Statement
 	 * @param int|string $value
 	 * @return this
 	 */
-	public function where($col, $operator, $value = NULL)
+	public function where(string $col,string $operator, $value = NULL)
 	{
 		$where = $this->hasWhere ? 'AND' : 'WHERE';
 		if (is_null($value)):
@@ -357,7 +357,14 @@ trait Statement
 		return $this;
 	}
 
-	public function match(array $match = [], $against = [], $mode = self::MATCH_BOOLEAN_MODE)
+	/**
+	 * Match statement
+	 * @param  array  $match
+	 * @param  array  $against
+	 * @param  string $mode
+	 * @return this
+	 */
+	public function match(array $match = [], $against = [],string $mode = self::MATCH_BOOLEAN_MODE)
 	{
 		$matches = implode(",", $match);
 		$against = is_array($against) ? implode(" ", $against) : $against;
@@ -755,6 +762,10 @@ trait Statement
 		return $this->get();
 	}
 
+	/**
+	 * Create the count query
+	 * @return int
+	 */
 	public function makeCountQuery()
 	{
 		$table = $this->table;
@@ -771,6 +782,10 @@ trait Statement
         return (int) $this->results->first()->count;
 	}
 
+	/**
+	 * Clone object
+	 * @return this
+	 */
 	public function __clone()
 	{
 		$sccopy = clone $this->statements;
@@ -779,6 +794,10 @@ trait Statement
 		return $this;
 	}
 
+	/**
+	 * Reset statement
+	 * @return void
+	 */
 	public function reset()
 	{
 		$this->statement = NULL;
