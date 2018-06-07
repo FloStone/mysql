@@ -628,6 +628,7 @@ trait Statement
 			$this->statement = $this->statements->build();
 
 		$this->query($this->statement);
+
 		$this->reset();
 		return $this->results;
 	}
