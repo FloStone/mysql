@@ -82,7 +82,7 @@ class Collection implements IteratorAggregate
 	public function add($key, $item = null)
 	{
 		if (is_null($item))
-			$this->data[] = $item;
+			$this->data[] = $key;
 		else
 			$this->data[$key] = $item;
 	}
