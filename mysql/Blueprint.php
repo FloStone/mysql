@@ -26,6 +26,12 @@ class Blueprint
 	protected $indices = [];
 
 	/**
+	 * Determine if the whole table is nullable
+	 * @var boolean
+	 */
+	protected $nullable = false;
+
+	/**
 	 * Constructor
 	 *
 	 * @return void
@@ -33,6 +39,15 @@ class Blueprint
 	public function __construct()
 	{
 		$this->columns = [];
+	}
+
+	/**
+	 * Set the whole table nullable
+	 * @return void
+	 */
+	public function nullable()
+	{
+		$this->nullable = true;
 	}
 
 	/**

@@ -2,7 +2,7 @@
 
 namespace FloStone\MySQL;
 
-use Closure;
+use Closure, Config;
 
 /**
  * Trait for MySQL statement
@@ -675,7 +675,7 @@ trait Statement
 	 */
 	public function columnExists($column)
 	{
-		$db = DB_DATABASE;
+		$db = Config::get('DB_DATABASE');
 		$table = $this->table;
 
 		if (is_null($this->getSchema($column)))
@@ -711,7 +711,7 @@ trait Statement
 	 */
 	public function getSchema($column, $select = '*')
 	{
-		$db = DB_DATABASE;
+		$db = Config::get('DB_DATABASE');
 		$table = $this->table;
 
 		return $this->query("SELECT $select FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '$db' AND TABLE_NAME = '$table' AND COLUMN_NAME = '$column'")->first();
